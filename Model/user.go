@@ -8,25 +8,25 @@ import (
 )
 
 type User struct {
-	ID        int       `json:"id"`
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
-	Email     string    `json:"email"`
-	Password  string    `json:"password"`
-	IsDeleted bool      `json:"is_deleted"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        uint32    `gorm:"primary_key;auto_increment" json:"id"`
+	FirstName string    `gorm:"size:255; not null;" json:"first_name"`
+	LastName  string    `gorm:"size:255; not null;" json:"last_name"`
+	Email     string    `gorm:"unique; size:100; not null;" json:"email"`
+	Password  string    `gorm:"size:100; not null;" json:"password"`
+	IsDeleted bool      `gorm:"column:is_deleted; default:false;" json:"is_deleted"`
+	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
-// PasswordMatches uses Go's bcrypt package to compare a user supplied password
-// with the hash we have stored for a given user in the database. If the password
-// and hash match, we return true; otherwise, we return false.
+func Hash(password string) ([]byte, error) {
+	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+}
+
 func (u *User) PasswordMatches(plainText string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plainText))
 	if err != nil {
 		switch {
 		case errors.Is(err, bcrypt.ErrMismatchedHashAndPassword):
-			// invalid password
 			return false, err
 		default:
 			return false, err
