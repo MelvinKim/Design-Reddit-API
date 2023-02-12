@@ -1,50 +1,56 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
-	model "github.com/MelvinKim/Design-Reddit-API/Controller"
 	controller "github.com/MelvinKim/Design-Reddit-API/Controller"
 	postgres "github.com/MelvinKim/Design-Reddit-API/Repository/postgres"
 	router "github.com/MelvinKim/Design-Reddit-API/Router"
 	usecase "github.com/MelvinKim/Design-Reddit-API/Usecase"
 	"github.com/MelvinKim/Design-Reddit-API/repository"
+	"github.com/jackc/pgx/v4"
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 )
 
 var (
 	DB             *gorm.DB
+	DSN            string
 	userRepository repository.UserRepository = postgres.NewPostgresRepository(DB)
 	userUsecase    usecase.UserUsecase       = usecase.NewUserUseCase(userRepository)
 	userController controller.UserController = controller.NewUserController(userUsecase)
 	httpRouter     router.Router             = router.NewChiRouter()
 )
 
-type Server struct {
-	DB *gorm.DB
-}
-
 // create a database connection
-func (server *Server) connectToDB(dbDriver, dbUser, dbPassword, dbPort, dbHost, dbName string) {
-	var err error
-	DBURL := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable password=%s", dbHost, dbPort, dbUser, dbName, dbPassword)
-	server.DB, err = gorm.Open(dbDriver, DBURL)
+func connectToDB() {
+	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error while trying to connect to % DB: %v", err)
+		log.Fatalf("Error getting env, not comming through %v", err)
 	} else {
-		log.Default().Printf("Connected to %s Postgres DB successfully!!", dbName)
+		fmt.Println("We are getting the env values")
 	}
 
-	// database migration
-	server.DB.Debug().AutoMigrate(model.User{}, )) 
+	DSN = fmt.Sprintf("postgres://%s:%s@%s:%s/%s", os.Getenv("DB_USER"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+	dbConn, err := pgx.Connect(context.Background(), DSN)
+	if err != nil {
+		log.Fatalf("unable to connect to postgres :) err: %v\n", err)
+	}
 
+	fmt.Println("Connected to postgres successfully!! :)")
+	defer dbConn.Close(context.Background())
 }
 
 func main() {
 	const port string = ":8080"
+
+	// connect to Postgres
+	connectToDB()
 
 	// Homepage route
 	httpRouter.GET("/", func(w http.ResponseWriter, r *http.Request) {
