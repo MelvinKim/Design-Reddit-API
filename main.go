@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// migrate the schema
-	err = db.AutoMigrate(&entity.User{})
+	err = db.AutoMigrate(&entity.User{}, &entity.Post{})
 	if err != nil {
 		log.Fatal("failed to migrate schema: ", err)
 	}
@@ -30,11 +30,19 @@ func main() {
 	userService := usecase.NewUserService(*userRepository)
 	userController := controller.NewUserController(*userService)
 
+	postRepository := repository.NewPostRepository(db)
+	postService := usecase.NewPostService(*postRepository)
+	postController := controller.NewPostController(*postService)
+
 	r := gin.Default()
 
 	r.GET("/users/:id", userController.GetUser)
 	r.GET("/users", userController.ListUsers)
 	r.POST("/users", userController.CreateUser)
+
+	r.GET("/posts/:id", postController.GetPost)
+	r.GET("/posts", postController.ListPosts)
+	r.POST("/posts", postController.CreatePost)
 
 	if err := r.Run(); err != nil {
 		log.Fatal("failed to start server: ", err)
