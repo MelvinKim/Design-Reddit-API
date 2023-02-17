@@ -1,37 +1,31 @@
 package usecase
 
 import (
-	model "github.com/MelvinKim/Design-Reddit-API/Model"
+	"errors"
+
+	"github.com/MelvinKim/Design-Reddit-API/entity"
 	"github.com/MelvinKim/Design-Reddit-API/repository"
 )
 
-type userUsecase struct{}
-
-var (
+type UserService struct {
 	userRepository repository.UserRepository
-)
-
-func NewUserUseCase(repository repository.UserRepository) UserUsecase {
-	userRepository = repository
-	return &userUsecase{}
 }
 
-func (u *userUsecase) Create(user *model.User) (*model.User, error) {
-	return userRepository.Create(user)
+func NewUserService(userRepository repository.UserRepository) *UserService {
+	return &UserService{userRepository: userRepository}
 }
 
-func (u *userUsecase) Get(id int) (*model.User, error) {
-	return userRepository.Get(id)
+func (s *UserService) CreateUser(first_name, last_name, email, password string) (*entity.User, error) {
+	if first_name == "" || last_name == "" || email == "" || password == "" {
+		return nil, errors.New("please provide all the fields")
+	}
+	return s.userRepository.CreateUser(first_name, last_name, email, password)
 }
 
-func (u *userUsecase) Update(id int, user *model.User) (*model.User, error) {
-	return userRepository.Update(id, user)
+func (s *UserService) GetUser(id int) (*entity.User, error) {
+	return s.userRepository.GetUser(id)
 }
 
-func (u *userUsecase) FindAll() ([]*model.User, error) {
-	return userRepository.FindAll()
-}
-
-func (u *userUsecase) Delete(id int) (int64, error) {
-	return userRepository.Delete(id)
+func (s *UserService) ListUsers() ([]*entity.User, error) {
+	return s.userRepository.ListUsers()
 }

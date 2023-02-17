@@ -1,83 +1,61 @@
 package controller
 
 import (
-	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
-	model "github.com/MelvinKim/Design-Reddit-API/Model"
 	usecase "github.com/MelvinKim/Design-Reddit-API/Usecase"
+	"github.com/MelvinKim/Design-Reddit-API/entity"
+	"github.com/gin-gonic/gin"
 )
 
-type userController struct{}
-
-var (
-	userUsecase usecase.UserUsecase
-)
-
-func NewUserController(usecase usecase.UserUsecase) UserController {
-	userUsecase = usecase
-	return &userController{}
+type UserController struct {
+	userService usecase.UserService
 }
 
-func (c *userController) Create(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var user model.User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		errorResponse := map[string]string{"error": "Bad request"}
-		json.NewEncoder(w).Encode(errorResponse)
+func NewUserController(userService usecase.UserService) *UserController {
+	return &UserController{userService: userService}
+}
+
+func (c *UserController) CreateUser(ctx *gin.Context) {
+	var input entity.User
+	if err := ctx.ShouldBindJSON(&input); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	result, err1 := userUsecase.Create(&user)
-	if err1 != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		errorResponse := map[string]string{"error": "error saving the post"}
-		json.NewEncoder(w).Encode(errorResponse)
+	user, err := c.userService.CreateUser(input.FirstName, input.LastName, input.Email, input.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(result)
+	ctx.JSON(http.StatusOK, gin.H{"data saved successfully": user})
 }
 
-func (c *userController) Get(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	id := r.URL.Path[len("/users/"):]
-	idInt, err := strconv.Atoi(id)
+func (c *UserController) GetUser(ctx *gin.Context) {
+	idStr := ctx.Param("id")
+	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid User ID"})
 		return
 	}
-	user, err1 := userUsecase.Get(idInt)
-	if err1 != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		errorResponse := map[string]string{"error": fmt.Sprintf("error getting user with id: %v", idInt)}
-		json.NewEncoder(w).Encode(errorResponse)
-	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
-}
-
-func (c *userController) FindAll(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	users, err := userUsecase.FindAll()
+	user, err := c.userService.GetUser(id)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		errorResponse := map[string]string{"error": "error fetching users"}
-		json.NewEncoder(w).Encode(errorResponse)
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(users)
+	ctx.JSON(http.StatusOK, gin.H{"user": user})
 }
 
-func (c *userController) Update(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) ListUsers(ctx *gin.Context) {
+	users, err := c.userService.ListUsers()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
+	ctx.JSON(http.StatusOK, gin.H{"users": users})
 }
-
-func (c *userController) Delete(w http.ResponseWriter, r *http.Request) {}
