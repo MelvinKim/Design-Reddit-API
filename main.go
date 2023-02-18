@@ -21,7 +21,7 @@ func main() {
 	}
 
 	// migrate the schema
-	err = db.AutoMigrate(&entity.User{}, &entity.Post{})
+	err = db.AutoMigrate(&entity.User{}, &entity.Post{}, &entity.Comment{})
 	if err != nil {
 		log.Fatal("failed to migrate schema: ", err)
 	}
@@ -34,6 +34,10 @@ func main() {
 	postService := usecase.NewPostService(*postRepository)
 	postController := controller.NewPostController(*postService)
 
+	commentRepository := repository.NewCommentRepository(db)
+	commentService := usecase.NewCommentService(*commentRepository)
+	commentController := controller.NewCommentController(*commentService)
+
 	r := gin.Default()
 
 	r.GET("/users/:id", userController.GetUser)
@@ -43,6 +47,9 @@ func main() {
 	r.GET("/posts/:id", postController.GetPost)
 	r.GET("/posts", postController.ListPosts)
 	r.POST("/posts", postController.CreatePost)
+
+	r.POST("/comments", commentController.CreateComment)
+	r.GET("/comments/:userID/:postID", commentController.ListComments)
 
 	if err := r.Run(); err != nil {
 		log.Fatal("failed to start server: ", err)

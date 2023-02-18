@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/MelvinKim/Design-Reddit-API/entity"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
 
@@ -16,11 +17,15 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 }
 
 func (r *UserRepository) CreateUser(first_name, last_name, email, password string) (*entity.User, error) {
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
 	user := &entity.User{
 		FirstName: first_name,
 		LastName:  last_name,
 		Email:     email,
-		Password:  password,
+		Password:  string(hashPassword),
 		IsDeleted: false,
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
