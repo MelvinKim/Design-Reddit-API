@@ -39,3 +39,20 @@ func (r *CommentRepository) ListComments(userID, postID int) ([]*entity.Comment,
 	}
 	return comments, nil
 }
+
+func (r *UserRepository) GetComment(id int) (*entity.Comment, error) {
+	comment := &entity.Comment{}
+	if err := r.db.First(comment, id).Error; err != nil {
+		return nil, err
+	}
+	return comment, nil
+}
+
+func (r *UserRepository) DeleteComment(id int) error {
+	comment := &entity.Comment{}
+	if err := r.db.Delete(comment, id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
