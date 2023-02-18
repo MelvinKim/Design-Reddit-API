@@ -51,3 +51,12 @@ func (r *UserRepository) ListUsers() ([]*entity.User, error) {
 	}
 	return users, nil
 }
+
+func (r *UserRepository) DeleteUser(id int) error {
+	user := &entity.User{}
+	if err := r.db.Delete(user, id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
