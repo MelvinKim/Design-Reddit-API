@@ -30,7 +30,7 @@ func (c *CommentController) CreateComment(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data saved successfully": comment})
+	ctx.JSON(http.StatusCreated, gin.H{"data saved successfully": comment})
 }
 
 func (c *CommentController) ListComments(ctx *gin.Context) {

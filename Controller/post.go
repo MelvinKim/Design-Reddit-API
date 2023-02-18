@@ -30,7 +30,7 @@ func (c *PostControler) CreatePost(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data saved successfully": post})
+	ctx.JSON(http.StatusCreated, gin.H{"data saved successfully": post})
 }
 
 func (c *PostControler) GetPost(ctx *gin.Context) {

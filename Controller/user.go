@@ -30,7 +30,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{"data saved successfully": user})
+	ctx.JSON(http.StatusCreated, gin.H{"data saved successfully": user})
 }
 
 func (c *UserController) GetUser(ctx *gin.Context) {
