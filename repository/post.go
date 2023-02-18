@@ -49,3 +49,12 @@ func (r *PostRepository) ListPosts() ([]*entity.Post, error) {
 	}
 	return posts, nil
 }
+
+func (r *PostRepository) DeletePost(id int) error {
+	post := &entity.Post{}
+	if err := r.db.Delete(post, id).Error; err != nil {
+		return err
+	}
+
+	return nil
+}

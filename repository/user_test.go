@@ -40,16 +40,16 @@ func TestUserRepository_CreateUser(t *testing.T) {
 	}
 
 	if retrievedUser.ID != user.ID {
-		t.Error("Expected ID to be ", user.ID, "but got ", retrievedUser.ID)
+		t.Error("Expected User ID to be ", user.ID, "but got ", retrievedUser.ID)
 	}
 	if retrievedUser.FirstName != user.FirstName {
-		t.Error("Expected FirstName to be ", user.FirstName, "but got ", retrievedUser.FirstName)
+		t.Error("Expected User FirstName to be ", user.FirstName, "but got ", retrievedUser.FirstName)
 	}
 	if retrievedUser.LastName != user.LastName {
-		t.Error("Expected LastName to be ", user.LastName, "but got ", retrievedUser.LastName)
+		t.Error("Expected User LastName to be ", user.LastName, "but got ", retrievedUser.LastName)
 	}
 	if retrievedUser.Email != user.Email {
-		t.Error("Expected Email to be ", user.Email, "but got ", retrievedUser.Email)
+		t.Error("Expected User Email to be ", user.Email, "but got ", retrievedUser.Email)
 	}
 
 	// clean up
