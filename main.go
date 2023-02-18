@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 
 	usecase "github.com/MelvinKim/Design-Reddit-API/Usecase"
 	"github.com/MelvinKim/Design-Reddit-API/controller"
@@ -11,6 +12,10 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+func HomepageHandler(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to the Reddit API build with Golang"})
+}
 
 func main() {
 	dsn := "host=localhost user=postgres password=postgres dbname=reddit-api port=5432 sslmode=disable"
@@ -39,6 +44,8 @@ func main() {
 	commentController := controller.NewCommentController(*commentService)
 
 	r := gin.Default()
+
+	r.GET("/", HomepageHandler)
 
 	r.GET("/users/:id", userController.GetUser)
 	r.GET("/users", userController.ListUsers)
