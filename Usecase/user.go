@@ -16,13 +16,27 @@ func NewUserService(userRepository repository.UserRepository) *UserService {
 }
 
 func (s *UserService) CreateUser(first_name, last_name, email, password string) (*entity.User, error) {
-	if first_name == "" || last_name == "" || email == "" || password == "" {
-		return nil, errors.New("please provide all the fields")
+	if first_name == "" {
+		return nil, errors.New("please enter your first name")
 	}
+	if last_name == "" {
+		return nil, errors.New("please enter your last name")
+	}
+	if email == "" {
+		return nil, errors.New("please enter your email address")
+	}
+	if password == "" {
+		return nil, errors.New("please enter your password")
+	}
+
 	return s.userRepository.CreateUser(first_name, last_name, email, password)
 }
 
 func (s *UserService) GetUser(id int) (*entity.User, error) {
+	if id == 0 {
+		return nil, errors.New("please enter your userID")
+	}
+
 	return s.userRepository.GetUser(id)
 }
 

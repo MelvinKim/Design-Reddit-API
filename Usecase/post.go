@@ -16,13 +16,27 @@ func NewPostService(postRepository repository.PostRepository) *PostService {
 }
 
 func (s *PostService) CreatePost(creator, subreddit int, title, content string) (*entity.Post, error) {
-	if title == "" || content == "" || creator == 0 || subreddit == 0 {
-		return nil, errors.New("all fields are required")
+	if title == "" {
+		return nil, errors.New("please enter a post title")
 	}
+	if content == "" {
+		return nil, errors.New("please populate your post :)")
+	}
+	if creator == 0 {
+		return nil, errors.New("please provide the creatorID")
+	}
+	if subreddit == 0 {
+		return nil, errors.New("please provide the subredditID")
+	}
+
 	return s.postRepository.CreatePost(creator, subreddit, title, content)
 }
 
 func (s *PostService) GetPost(id int) (*entity.Post, error) {
+	if id == 0 {
+		return nil, errors.New("please enter the postID")
+	}
+
 	return s.postRepository.GetPost(id)
 }
 
