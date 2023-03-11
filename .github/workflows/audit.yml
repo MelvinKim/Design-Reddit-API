@@ -43,6 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
+          dockerfile: Dockerfile
           push: false
           tags: ${{ env.DOCKER_REPO }}:latest
       - name: Log in to Docker Hub
