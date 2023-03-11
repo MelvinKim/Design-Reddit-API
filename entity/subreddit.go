@@ -2,6 +2,7 @@ package entity
 
 import "time"
 
+// Subreddit represents the Subreddit entity
 type Subreddit struct {
 	ID        int       `json:"id"`
 	Creator   int       `json:"creator_id"` // TODO: check if to use an int or a whole struct to reference the creator

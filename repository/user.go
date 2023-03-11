@@ -19,14 +19,14 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 }
 
 // CreateUser creates a new user in the DB
-func (r *UserRepository) CreateUser(first_name, last_name, email, password string) (*entity.User, error) {
+func (r *UserRepository) CreateUser(firstName, lastName, email, password string) (*entity.User, error) {
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
 		return nil, err
 	}
 	user := &entity.User{
-		FirstName: first_name,
-		LastName:  last_name,
+		FirstName: firstName,
+		LastName:  lastName,
 		Email:     email,
 		Password:  string(hashPassword),
 		IsDeleted: false,

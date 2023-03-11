@@ -18,11 +18,11 @@ func NewUserService(userRepository repository.UserRepository) *UserService {
 }
 
 // CreateUser handles the user creation logic
-func (s *UserService) CreateUser(first_name, last_name, email, password string) (*entity.User, error) {
-	if first_name == "" {
+func (s *UserService) CreateUser(firstName, lastName, email, password string) (*entity.User, error) {
+	if firstName == "" {
 		return nil, errors.New("please enter your first name")
 	}
-	if last_name == "" {
+	if lastName == "" {
 		return nil, errors.New("please enter your last name")
 	}
 	if email == "" {
@@ -32,7 +32,7 @@ func (s *UserService) CreateUser(first_name, last_name, email, password string) 
 		return nil, errors.New("please enter your password")
 	}
 
-	return s.userRepository.CreateUser(first_name, last_name, email, password)
+	return s.userRepository.CreateUser(firstName, lastName, email, password)
 }
 
 // GetUser handles all the logic for fetching user using UserIDs

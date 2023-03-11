@@ -2,6 +2,7 @@ package entity
 
 import "time"
 
+// Comment represents the Comment Entity
 type Comment struct {
 	ID         int       `json:"int"`
 	Creator    int       `json:"creator_id"`

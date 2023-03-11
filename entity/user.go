@@ -7,6 +7,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// User represents the User entity
 type User struct {
 	ID        uint32    `gorm:"primary_key;auto_increment" json:"id"`
 	FirstName string    `gorm:"size:255; not null;" json:"first_name"`
@@ -18,10 +19,12 @@ type User struct {
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
+// Hash encrypts the user password
 func Hash(password string) ([]byte, error) {
 	return bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 }
 
+// PasswordMatches checks if the provided password matches with encrypted password
 func (u *User) PasswordMatches(plainText string) (bool, error) {
 	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(plainText))
 	if err != nil {
