@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	controller "github.com/MelvinKim/Design-Reddit-API/Controller"
 	usecase "github.com/MelvinKim/Design-Reddit-API/Usecase"
-	"github.com/MelvinKim/Design-Reddit-API/controller"
 	"github.com/MelvinKim/Design-Reddit-API/entity"
 	"github.com/MelvinKim/Design-Reddit-API/repository"
 	"github.com/gin-gonic/gin"
