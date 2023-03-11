@@ -1,4 +1,4 @@
-name: Audit
+name: Audit, build and push to Docker Hub
 
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: .
-          dockerfile: ../../Dockerfile
+          dockerfile: /Users/melvinkimathi/Documents/Other/cloned github repos/Go/Design-the-Reddit-API/Dockerfile
           push: false
           tags: ${{ env.DOCKER_REPO }}:latest
       - name: Log in to Docker Hub

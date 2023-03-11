@@ -11,3 +11,4 @@ COPY *.go ./
 RUN go build -o reddit-api-clone
 
 CMD ["/reddit-api-clone"]
+
