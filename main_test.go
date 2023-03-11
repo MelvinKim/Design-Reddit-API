@@ -1,7 +1,7 @@
 package main
 
 import (
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -26,7 +26,7 @@ func TestHomePageHandler(t *testing.T) {
 	w := httptest.NewRecorder()
 	r.ServeHTTP(w, req)
 
-	responseData, err := ioutil.ReadAll(w.Body)
+	responseData, err := io.ReadAll(w.Body)
 	if err != nil {
 		t.Error("error while reading HomepageHandler response body: ", err)
 	}
