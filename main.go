@@ -15,8 +15,10 @@ import (
 
 var (
 	// UserController ...
-	UserController    *controller.UserController
-	PostController    *controller.PostControler
+	UserController *controller.UserController
+	// PostController ...
+	PostController *controller.PostControler
+	// CommentController ...
 	CommentController *controller.CommentController
 )
 
