@@ -7,14 +7,17 @@ import (
 	"github.com/MelvinKim/Design-Reddit-API/repository"
 )
 
+// UserService is responsible for implementing all user related logic
 type UserService struct {
 	userRepository repository.UserRepository
 }
 
+// NewUserService creates a new UserService Instance
 func NewUserService(userRepository repository.UserRepository) *UserService {
 	return &UserService{userRepository: userRepository}
 }
 
+// CreateUser handles the user creation logic
 func (s *UserService) CreateUser(first_name, last_name, email, password string) (*entity.User, error) {
 	if first_name == "" {
 		return nil, errors.New("please enter your first name")
@@ -32,6 +35,7 @@ func (s *UserService) CreateUser(first_name, last_name, email, password string) 
 	return s.userRepository.CreateUser(first_name, last_name, email, password)
 }
 
+// GetUser handles all the logic for fetching user using UserIDs
 func (s *UserService) GetUser(id int) (*entity.User, error) {
 	if id == 0 {
 		return nil, errors.New("please enter your userID")
@@ -40,6 +44,7 @@ func (s *UserService) GetUser(id int) (*entity.User, error) {
 	return s.userRepository.GetUser(id)
 }
 
+// ListUsers handles the logic for fetching application users
 func (s *UserService) ListUsers() ([]*entity.User, error) {
 	return s.userRepository.ListUsers()
 }

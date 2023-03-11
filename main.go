@@ -14,11 +14,13 @@ import (
 )
 
 var (
+	// UserController ...
 	UserController    *controller.UserController
 	PostController    *controller.PostControler
 	CommentController *controller.CommentController
 )
 
+// HomepageHandler displays the welcome message on the Homepage
 func HomepageHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "Welcome to the Reddit API build with Golang"})
 }

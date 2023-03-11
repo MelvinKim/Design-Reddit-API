@@ -9,14 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// UserController is responsible for handling the user input and output of the application
 type UserController struct {
 	userService usecase.UserService
 }
 
+// NewUserController creates a new UserController instance
 func NewUserController(userService usecase.UserService) *UserController {
 	return &UserController{userService: userService}
 }
 
+// CreateUser creates a new user
 func (c *UserController) CreateUser(ctx *gin.Context) {
 	var input entity.User
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -33,6 +36,7 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"data saved successfully": user})
 }
 
+// GetUser gets a user using the UserID
 func (c *UserController) GetUser(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -50,6 +54,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"user": user})
 }
 
+// ListUsers fetches all application users
 func (c *UserController) ListUsers(ctx *gin.Context) {
 	users, err := c.userService.ListUsers()
 	if err != nil {

@@ -9,14 +9,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// CommentController is responsible for handling the post input and output of the application
 type PostControler struct {
 	postService usecase.PostService
 }
 
+// NewPostController creates a new PostController instance
 func NewPostController(postService usecase.PostService) *PostControler {
 	return &PostControler{postService: postService}
 }
 
+// CreatePost creates a new Post
 func (c *PostControler) CreatePost(ctx *gin.Context) {
 	var input entity.Post
 	if err := ctx.ShouldBindJSON(&input); err != nil {
@@ -33,6 +36,7 @@ func (c *PostControler) CreatePost(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, gin.H{"data saved successfully": post})
 }
 
+// GetPost fetches post based on the postID
 func (c *PostControler) GetPost(ctx *gin.Context) {
 	idStr := ctx.Param("id")
 	id, err := strconv.Atoi(idStr)
@@ -50,6 +54,7 @@ func (c *PostControler) GetPost(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"post": post})
 }
 
+// ListPosts fetches the application posts
 func (c *PostControler) ListPosts(ctx *gin.Context) {
 	posts, err := c.postService.ListPosts()
 	if err != nil {
