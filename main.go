@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	usecase "github.com/MelvinKim/Design-Reddit-API/Usecase"
-	"github.com/MelvinKim/Design-Reddit-API/controller"
+	controller "github.com/MelvinKim/Design-Reddit-API/controller"
 	"github.com/MelvinKim/Design-Reddit-API/entity"
 	"github.com/MelvinKim/Design-Reddit-API/repository"
 	"github.com/gin-gonic/gin"
